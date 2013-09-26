@@ -1,0 +1,12 @@
+.thumbnails {
+  margin-top: 30px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  width: 970px;
+  display: none;
+}
+.thumbnails li {
+  margin: 0 0 10px 10px;
+  list-style-type: none;
+  float: left;
+}
