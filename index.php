@@ -21,6 +21,37 @@ if (isset($_POST['transloadit'])) {
     }
   }
 }
+
+function displayThumbnails($thumbs) {
+  $out = '<div class="row">';
+  foreach ($thumbs as $url) {
+    $out .= <<<HTML
+      <div class="col-sm-6 col-md-2">
+        <a href="https://transloadit.com" class="thumbnail">
+          <img src="{$url}">
+        </a>
+      </div>
+HTML;
+  }
+  $out .= '</div>';
+  return $out;
+}
+
+function displayVideos($videos) {
+  $out = '<div class="row">';
+  foreach ($videos as $url) {
+    $out .= <<<HTML
+      <div class="col-sm-6 col-md-3">
+        <video width="480" height="320" controls>
+          <source src="{$url}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+HTML;
+  }
+  $out .= '</div>';
+  return $out;
+}
 ?>
 <!doctype html>
 <html>
@@ -44,29 +75,35 @@ if (isset($_POST['transloadit'])) {
       </dl>
       <hr />
 
-      <h2>Resized Results</h2>
-      <div class="row">
-        <?php foreach ($results['resized'] as $url) : ?>
-          <div class="col-sm-6 col-md-2">
-            <a href="https://transloadit.com" class="thumbnail">
-              <img src="<?php echo $url ?>" alt="...">
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-      <hr />
+      <?php if (isset($results['resized'])) : ?>
+        <h2>Resized Results</h2>
+        <?php echo displayThumbnails($results['resized']) ?>
+        <hr />
+      <?php endif; ?>
 
-      <h2>Sepia Results</h2>
-      <div class="row">
-        <?php foreach ($results['sepia'] as $url) : ?>
-          <div class="col-sm-6 col-md-2">
-            <a href="https://transloadit.com" class="thumbnail">
-              <img src="<?php echo $url ?>" alt="...">
-            </a>
-          </div>
-        <?php endforeach; ?>
-      </div>
-      <hr />
+      <?php if (isset($results['sepia'])) : ?>
+        <h2>Sepia Results</h2>
+        <?php echo displayThumbnails($results['sepia']) ?>
+        <hr />
+      <?php endif; ?>
+
+      <?php if (isset($results['iphone_video_high'])) : ?>
+        <h2>iPhone High-res Video</h2>
+        <?php echo displayVideos($results['iphone_video_high']) ?>
+        <hr />
+      <?php endif; ?>
+
+      <?php if (isset($results['iphone_video_low'])) : ?>
+        <h2>iPhone Low-res Video</h2>
+        <?php echo displayVideos($results['iphone_video_low']) ?>
+        <hr />
+      <?php endif; ?>
+
+      <?php if (isset($results['video_thumbnails'])) : ?>
+        <h2>Video Thumbnail Results</h2>
+        <?php echo displayThumbnails($results['video_thumbnails']) ?>
+        <hr />
+      <?php endif; ?>
     <?php endif; ?>
     <div class="row">
       <div class="js-transloadit-upload col-md-4">

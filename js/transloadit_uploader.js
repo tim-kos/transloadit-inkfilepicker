@@ -83,6 +83,22 @@
             resize_strategy: "pad",
             background: "#000000",
             sepia: 70
+          },
+          iphone_video_high: {
+            robot: "/video/encode",
+            use: "imported",
+            preset: "iphone-high"
+          },
+          iphone_video_low: {
+            robot: "/video/encode",
+            use: "imported",
+            preset: "iphone-low"
+          },
+          video_thumbnails: {
+            robot: "/video/thumbs",
+            use: "imported",
+            width: 125,
+            height: 125
           }
         }
       },
