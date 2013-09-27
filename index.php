@@ -1,57 +1,15 @@
 <?php
-function pr($a) {
-  echo '<pre>';
-  print_r($a);
-  echo '</pre>';
-}
+require_once('params.php');
+require_once('helpers.php');
 
 $results = array();
-
 if (isset($_POST['transloadit'])) {
-  $transloaditData = $_POST['transloadit'];
-  if (ini_get('magic_quotes_gpc') === '1') {
-    $transloaditData = stripslashes($transloaditData);
-  }
-  $transloaditData = json_decode($transloaditData, true);
-
-  foreach ($transloaditData['results'] as $step => $stepResults) {
-    $results[$step] = array();
-    foreach ($stepResults as $result) {
-      $results[$step][] = $result['url'];
-    }
-  }
+  $results = prepareTransloaditResults($_POST['transloadit']);
 }
 
-function displayThumbnails($thumbs) {
-  $out = '<div class="row">';
-  foreach ($thumbs as $url) {
-    $out .= <<<HTML
-      <div class="col-sm-6 col-md-2">
-        <a href="https://transloadit.com" class="thumbnail">
-          <img src="{$url}">
-        </a>
-      </div>
-HTML;
-  }
-  $out .= '</div>';
-  return $out;
-}
-
-function displayVideos($videos) {
-  $out = '<div class="row">';
-  foreach ($videos as $url) {
-    $out .= <<<HTML
-      <div class="col-sm-6 col-md-3">
-        <video width="480" height="320" controls>
-          <source src="{$url}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </div>
-HTML;
-  }
-  $out .= '</div>';
-  return $out;
-}
+$tlParamsData = getTransloaditParamsAndSignature();
+$tlParams     = $tlParamsData['params'];
+$tlSignature  = $tlParamsData['signature'];
 ?>
 <!doctype html>
 <html>
@@ -108,6 +66,9 @@ HTML;
     <div class="row">
       <div class="js-transloadit-upload col-md-4">
         <form role="form" action="index.php" enctype="multipart/form-data" method="POST">
+          <input type="hidden" name="params" value="<?php echo json_encode($tlParams) ?>" />
+          <input type="hidden" name="signature" value="<?php echo $tlSignature ?>" />
+
           <div class="form-group">
             <label for="pick-files">Pick some files:</label>
             <button class="btn btn-primary js-pick-files" name="pick-files">Pick some files</button>

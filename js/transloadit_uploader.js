@@ -1,6 +1,6 @@
 (function ($) {
   function TransloaditUploader() {
-    this.filepickerApiKey   = 'INKFILEPICKER-API-KEY';
+    this.filepickerApiKey   = 'INK-FILEPICKER-API-KEY';
   }
 
   TransloaditUploader.prototype.init = function($container) {
