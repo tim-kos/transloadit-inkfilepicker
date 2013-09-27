@@ -1,4 +1,6 @@
 <?php
+require_once('helpers.php');
+
 $authKey    = 'YOUR-TRANSLOADIT-AUTH-KEY';
 $authSecret = 'YOUR-TRANSLOADIT-AUTH-SECRET';
 
@@ -52,11 +54,8 @@ $params['steps'] = array(
     "height" => 125
   )
 );
-// json_encode escapes slashes by default, which would result in a wrong signature
-// If you run PHP 5.4, you could also use the JSON_UNESCAPED_SLASHES bitmask in
-// the second argument to json_encode
-$encodedParams = str_replace('\/','/', json_encode($params));
-$signature     = hash_hmac('sha1', $encodedParams, $authSecret);
+
+$signature = calcSignature($authSecret, $params);
 
 header('Content-type: application/json');
 echo json_encode(compact('signature', 'params'));
