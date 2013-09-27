@@ -1,6 +1,5 @@
 (function ($) {
   function TransloaditUploader() {
-    this.transloaditAuthKey = 'TRANSLOADIT-AUTH-KEY';
     this.filepickerApiKey   = 'INKFILEPICKER-API-KEY';
   }
 
@@ -46,66 +45,39 @@
       } else if (!self.wasSubmitted) {
         e.preventDefault();
 
-        self._bindTransloadit();
-        self.$form.trigger('submit.transloadit');
-        self.wasSubmitted = true;
+        self._bindTransloadit(function() {
+          self.$form.trigger('submit.transloadit');
+          self.wasSubmitted = true;
+        });
       }
     });
   };
 
-  TransloaditUploader.prototype._bindTransloadit = function() {
+  TransloaditUploader.prototype._bindTransloadit = function(cb) {
     var self = this;
-    this.$form.transloadit({
-      wait: true,
-      fields: true,
-      params: {
-        auth: {
-          key: this.transloaditAuthKey
-        },
-        steps: {
-          imported: {
-            robot: "/http/import",
-            url: this.transloaditImportUrls
-          },
-          resized: {
-            robot: "/image/resize",
-            use: "imported",
-            width: 125,
-            height: 125,
-            resize_strategy: "pad",
-            background: "#000000"
-          },
-          sepia: {
-            robot: "/image/resize",
-            use: "imported",
-            width: 125,
-            height: 125,
-            resize_strategy: "pad",
-            background: "#000000",
-            sepia: 70
-          },
-          iphone_video_high: {
-            robot: "/video/encode",
-            use: "imported",
-            preset: "iphone-high"
-          },
-          iphone_video_low: {
-            robot: "/video/encode",
-            use: "imported",
-            preset: "iphone-low"
-          },
-          video_thumbnails: {
-            robot: "/video/thumbs",
-            use: "imported",
-            width: 125,
-            height: 125
-          }
+
+    this._fetchParamsAndSignature(function(params, signature) {
+      self.$form.transloadit({
+        wait: true,
+        fields: true,
+        params: params,
+        signature: signature,
+        onError: function(assembly) {
+          var err = 'There was a problem processing the files.';
+          self._showError(err);
         }
-      },
-      onError: function(assembly) {
-        var err = 'There was a problem processing the files.';
-        self._showError(err);
-      }
+      });
+
+      cb();
+    });
+  };
+
+  TransloaditUploader.prototype._fetchParamsAndSignature = function(cb) {
+    var data = {
+      url: this.transloaditImportUrls
+    };
+    $.post('params.php', data, function(response) {
+      cb(response.params, response.signature);
     });
   };
 
