@@ -5,19 +5,20 @@ $results = array();
 if (isset($_POST['transloadit'])) {
   $results = prepareTransloaditResults($_POST['transloadit']);
 }
-
 ?>
 <!doctype html>
 <html>
 <head>
   <meta charset="UTF-8" />
-  <title>Transloadit meets Filepicker</title>
+  <title>Transloadit meets InkFilepicker</title>
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="container">
-    <h1>Transloadit meets Filepicker</h1>
+    <h1>Transloadit meets InkFilepicker</h1>
+    <p>Import images or videos from anywhere using the filepicker, and then see how Transloadit converts them.</p>
+    <p>You can find the code for this <a href="https://github.com/tim-kos/transloadit-inkfilepicker">here</a>.</p>
     <hr />
 
     <?php if (!empty($results)) : ?>
